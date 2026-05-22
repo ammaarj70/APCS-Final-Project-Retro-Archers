@@ -1,5 +1,13 @@
 public class Platform {
-  PImage platformImg; // placeholder
+  float x, y, w, h;
+  PImage platformImg;
+
+  Platform(float x, float y, float w, float h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+  }
 
   void display() {
     if (platformImg != null) {

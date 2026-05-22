@@ -12,13 +12,18 @@ final int GAME_OVER = 2;
 
 void setup() {
   size(800, 600);
+  frameRate(60);
   enemies = new ArrayList<Enemy>();
   arrows = new ArrayList<Arrow>();
   apples = new ArrayList<Apple>();
   platforms = new ArrayList<Platform>();
-  player = new Player(width / 2, height / 2);
+  platforms.add(new Platform(0, 560, 800, 40));
+  platforms.add(new Platform(150, 430, 180, 20));
+  platforms.add(new Platform(460, 400, 180, 20));
+  platforms.add(new Platform(300, 300, 160, 20));
+  player = new Player(340, 500);
   waveManager = new WaveManager(enemies);
-  gameState = START;
+  gameState = PLAYING;
 }
 
 void draw() {

@@ -1,5 +1,18 @@
 public class Apple {
-  PImage appleImg; // placeholder
+  PVector pos;
+  float radius;
+  int type;
+  boolean active;
+  PImage appleImg;
+
+  Apple(float x, float y, int type) {
+    pos = new PVector(x, y);
+    this.type = type;
+    this.active = true;
+    radius = 14;
+  }
+
+  void update() {}
 
   void display() {
     if (!active) return;
