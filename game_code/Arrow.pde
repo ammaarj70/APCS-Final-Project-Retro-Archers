@@ -3,7 +3,7 @@ public class Arrow {
   PVector vel;
   int type;
   boolean active;
-  PImage arrowImg;
+  PImage arrowImg = loadImage("arrow.png");
 
   Arrow(PVector pos, PVector vel, int type) {
     this.pos = pos.copy();
@@ -15,13 +15,10 @@ public class Arrow {
   void update() {}
 
   void display() {
-    if (!active) return;
     if (arrowImg != null) {
       image(arrowImg, pos.x, pos.y, 20, 6);
     } else {
-      float angle = atan2(vel.y, vel.x);
       translate(pos.x, pos.y);
-      rotate(angle);
       stroke(150, 100, 30);
       strokeWeight(2);
       line(-12, 0, 4, 0);

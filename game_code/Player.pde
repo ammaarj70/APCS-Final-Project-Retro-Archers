@@ -7,7 +7,7 @@ public class Player extends Entity {
   PVector aimCurrent;
 
   Player(float x, float y) {
-    super(x, y, 40, 60);
+    super(x, y, 32, 82);
     stamina = 100;
     maxStamina = 100;
     currentArrowType = 1;
@@ -26,8 +26,22 @@ public class Player extends Entity {
   }
 
   void display() {
-    fill(60, 130, 220);
-    noStroke();
-    rect(pos.x, pos.y, w, h);
+    super.display();
+    // health bar
+    fill(0, 200, 0);
+    rect(pos.x, pos.y - 12, w * ((float)health / maxHealth), 5);
+    // stamina bar
+    fill(0, 50, 150);
+    rect(pos.x, pos.y - 20, w, 5);
+    fill(0, 150, 255);
+    rect(pos.x, pos.y - 20, w * (stamina / maxStamina), 5);
+  }
+  
+  public float getX() {
+    return this.x;
+  }
+  
+  public float getY() {
+    return this.y;
   }
 }

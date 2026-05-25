@@ -15,7 +15,7 @@ public class WaveManager {
     if (!firstSpawned) {
       spawnTimer++;
       if (spawnTimer >= 120) {
-        enemies.add(new Enemy(520, 472, player));
+        enemies.add(new Enemy(555, 321, player));
         firstSpawned = true;
       }
     }

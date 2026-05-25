@@ -19,4 +19,12 @@ public class Platform {
       rect(x, y, w, h);
     }
   }
+  
+  public float getX() {
+    return this.x;
+  }
+  
+  public float getY() {
+    return this.y;
+  }
 }
