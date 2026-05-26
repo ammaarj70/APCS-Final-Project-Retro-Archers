@@ -3,13 +3,9 @@ public class Entity extends Physics {
   PImage img;
   PImage bow;
   int aim;
-  float x;
-  float y;
   
   Entity(float x, float y, float w, float h) {
     super(x, y, w, h);
-    x = this.x;
-    y = this.y;
     health = 100;
     maxHealth = 100;
     img = loadImage("entity.png");
@@ -41,11 +37,11 @@ public class Entity extends Physics {
   }
   
   public float getX() {
-    return this.x;
+    return pos.x;
   }
   
   public float getY() {
-    return this.y;
+    return pos.y;
   }
   
   

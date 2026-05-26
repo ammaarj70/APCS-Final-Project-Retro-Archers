@@ -24,7 +24,7 @@ void setup() {
   //platforms.add(new Platform(300, 300, 160, 20));
   player = new Player(platforms.get(0).getX()+74+50, platforms.get(0).getY()-80);
   waveManager = new WaveManager(enemies);
-  arrows.add(new Arrow(new PVector(player.getX(), player.getY()), new PVector(1, 2), player.currentArrowType));
+  //arrows.add(new Arrow(new PVector(140, 330), new PVector(1, 2), player.currentArrowType));
   gameState = PLAYING;
 }
 

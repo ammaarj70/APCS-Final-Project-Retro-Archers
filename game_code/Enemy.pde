@@ -14,9 +14,13 @@ public class Enemy extends Entity {
   void updateBot() {}
 
   void display() {
-    super.display();
-    fill(220, 80, 60);
+    if (img != null) {
+      image(img, pos.x, pos.y, w, h);
+    }
     noStroke();
-    //rect(pos.x, pos.y, w, h);
+    fill(180, 0, 0);
+    rect(pos.x, pos.y - 12, w, 5);
+    fill(0, 200, 0);
+    rect(pos.x, pos.y - 12, w * ((float)health / maxHealth), 5);
   }
 }

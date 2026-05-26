@@ -3,20 +3,21 @@ public class Arrow {
   PVector vel;
   int type;
   boolean active;
-  PImage arrowImg = loadImage("arrow.png");
+  
 
   Arrow(PVector pos, PVector vel, int type) {
     this.pos = pos.copy();
     this.vel = vel.copy();
     this.type = type;
     this.active = true;
+    PImage arrowImg = loadImage("arrow.png");
   }
 
   void update() {}
 
   void display() {
     if (arrowImg != null) {
-      image(arrowImg, pos.x, pos.y, 20, 6);
+      image(arrowImg, pos.x, pos.y, 200, 60);
     } else {
       translate(pos.x, pos.y);
       stroke(150, 100, 30);

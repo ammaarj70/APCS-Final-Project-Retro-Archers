@@ -38,10 +38,10 @@ public class Player extends Entity {
   }
   
   public float getX() {
-    return this.x;
+    return pos.x;
   }
   
   public float getY() {
-    return this.y;
+    return pos.y;
   }
 }
