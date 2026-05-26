@@ -57,10 +57,12 @@ public class Player extends Entity {
     aiming = false;
  
     PVector bowPos = new PVector(pos.x + w / 2, pos.y + h * 0.35);
+    
     PVector dir = PVector.sub(new PVector(mouseX, mouseY), bowPos); //took a while to fix this: arrow once fired needs to be independent of the bow
     if (dir.mag() < 5) return null;
  
-    float speed = constrain(dir.mag() / 30.0, 2, 12);
+    //THIS WAS A MISTAKE: REPLACE THIS WITH TIME SPENT CLICKING INSTEAD OF BASING SPEED OFF OF WHERE THE MOUSE IS
+    float speed = 8;
     dir.normalize(); //necessary for speed to be accurate
     dir.mult(speed);
  
@@ -113,7 +115,7 @@ public class Player extends Entity {
  
     // aim line shows fire direction (also for debugging)
     if (aiming) {
-      PVector bowPos = new PVector(pos.x + w / 2, pos.y + h * 0.35); 
+      PVector bowPos = new PVector(pos.x+w/1.3, pos.y+h/4); 
       PVector dir = PVector.sub(new PVector(mouseX, mouseY), bowPos);  
       dir.normalize();   
       stroke(255, 255, 0, 180); 

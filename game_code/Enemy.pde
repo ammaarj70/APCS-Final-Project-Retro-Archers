@@ -31,7 +31,7 @@ public class Enemy extends Entity {
       float tx = target.pos.x + target.w / 2;
       float ty = target.pos.y + target.h * 0.35;
       float bowAngle = atan2(ty - (pos.y + h * 0.35), tx - (pos.x + w / 2));
-      drawRotated(bowImg, pos.x + w / 2 - 10, pos.y + h * 0.35 - 45, 20, 90, bowAngle);
+      drawRotated(bowImg, pos.x-w/2.6, pos.y+h/4, 13/1.3, 59/1.3, bowAngle);
     }
   }
 }

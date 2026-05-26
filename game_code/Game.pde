@@ -29,7 +29,7 @@ void setup() {
 }
 
 void draw() {
-  background(60, 70, 110);
+  background(136, 8, 8);
   if (gameState == START) {
   } else if (gameState == PLAYING) {
     updateGame();

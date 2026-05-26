@@ -3,6 +3,10 @@ public class Entity extends Physics {
   PImage img;
   PImage bow;
   int aim;
+  float bowx = pos.x + w / 1.3;
+  float bowy = pos.y+h/4;
+  float boww = 13/1.3;
+  float bowh = 59/1.3;
   
   Entity(float x, float y, float w, float h) {
     super(x, y, w, h);
@@ -14,7 +18,7 @@ public class Entity extends Physics {
 
   void display() {
       image(img, pos.x, pos.y, w, h);
-      image(bow, pos.x+w/1.3, pos.y+h/4, 13/1.3, 59/1.3);
+      image(bow, bowx, bowy, boww, bowh);
       fill(150);
       noStroke();
       //rect(pos.x, pos.y, w, h);

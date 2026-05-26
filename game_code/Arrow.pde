@@ -4,6 +4,7 @@ public class Arrow {
   int type;
   boolean active;
   PImage arrowImg;
+  PVector gravity = new PVector(0, 0.06);
   
 
   Arrow(PVector pos, PVector vel, int type) {
@@ -17,6 +18,7 @@ public class Arrow {
   void update() {
     if (!active) return;
     pos.add(vel);
+    vel.add(gravity);
     if (pos.x < 0 || pos.x > width || pos.y < 0 || pos.y > height) {
       active = false;
     }
