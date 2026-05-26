@@ -3,19 +3,19 @@ public class Physics {
   PVector vel;
   float w, h;
   boolean onGround;
-  float gravity = 0.1;
+  float gravity = 0.3;
 
   Physics(float x, float y, float w, float h) {
     pos = new PVector(x, y);
     vel = new PVector(0, 0);
     this.w = w;
     this.h = h;
-    onGround = false;
+    onGround = true;
   }
 
   void applyPhysics() {
     if (!onGround) {
-      //vel.y += gravity;
+      vel.y += gravity;
     }
     pos.add(vel);
     if (onGround) {

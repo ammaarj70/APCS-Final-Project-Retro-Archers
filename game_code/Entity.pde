@@ -20,6 +20,14 @@ public class Entity extends Physics {
       //rect(pos.x, pos.y, w, h);
   }
   
+  void drawRotated(PImage img, float x, float y, float w, float h, float angle) {
+    pushMatrix();
+    translate(x + w / 2, y + h / 2);
+    rotate(angle);
+    image(img, -w / 2, -h / 2, w, h);
+    popMatrix();
+  }
+  
   public void setAim(int aim) {
     this.aim = aim;
   }

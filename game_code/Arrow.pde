@@ -3,6 +3,7 @@ public class Arrow {
   PVector vel;
   int type;
   boolean active;
+  PImage arrowImg;
   
 
   Arrow(PVector pos, PVector vel, int type) {
@@ -10,22 +11,31 @@ public class Arrow {
     this.vel = vel.copy();
     this.type = type;
     this.active = true;
-    PImage arrowImg = loadImage("arrow.png");
+    arrowImg = loadImage("arrow.png");
   }
 
-  void update() {}
+  void update() {
+    if (!active) return;
+    pos.add(vel);
+    if (pos.x < 0 || pos.x > width || pos.y < 0 || pos.y > height) {
+      active = false;
+    }
+  }
 
   void display() {
+    if (!active) return;
+    float angle = atan2(vel.y, vel.x);
     if (arrowImg != null) {
-      image(arrowImg, pos.x, pos.y, 200, 60);
-    } else {
-      translate(pos.x, pos.y);
-      stroke(150, 100, 30);
-      strokeWeight(2);
-      line(-12, 0, 4, 0);
-      fill(180, 90, 20);
-      noStroke();
-      triangle(4, 0, -2, -3, -2, 3);
+      // pos is the arrow center. offset by half-dims to get top-left for drawRotated
+      drawRotated(arrowImg, pos.x - 21, pos.y - 5, 43, 10, angle);
     }
+  }
+  
+  void drawRotated(PImage img, float x, float y, float w, float h, float angle) {
+    pushMatrix();
+    translate(x + w / 2, y + h / 2);
+    rotate(angle);
+    image(img, -w / 2, -h / 2, w, h);
+    popMatrix();
   }
 }
