@@ -49,7 +49,6 @@ void updateGame() {
 }
 
 void renderGame() {
-  player.applyPhysics();
   for (Platform p : platforms) p.display();
   for (Apple ap : apples) ap.display();
   for (Arrow a : arrows) a.display(); System.out.print("HI");
@@ -75,6 +74,33 @@ void drawOverlay() {
 }
 
 void checkCollisions() {
+  player.onGround = false;
+  for (Platform p : platforms) {
+    if (player.vel.y >= 0 &&
+        player.pos.x + player.w > p.x &&
+        player.pos.x < p.x + p.w &&
+        player.pos.y + player.h >= p.y &&
+        player.pos.y + player.h <= p.y + p.h) {
+      player.pos.y = p.y - player.h;
+      player.vel.y = 0;
+      player.onGround = true;
+    }
+  }
+ 
+  for (Enemy e : enemies) {
+    e.onGround = false;
+    for (Platform p : platforms) {
+      if (e.vel.y >= 0 &&
+          e.pos.x + e.w > p.x &&
+          e.pos.x < p.x + p.w &&
+          e.pos.y + e.h >= p.y &&
+          e.pos.y + e.h <= p.y + p.h) {
+        e.pos.y = p.y - e.h;
+        e.vel.y = 0;
+        e.onGround = true;
+      }
+    }
+  }
 }
 
 void keyPressed() {

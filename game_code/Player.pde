@@ -34,11 +34,12 @@ public class Player extends Entity {
     if (stamina >= 15) {
       vel.y = -9;
       onGround = false;
-      stamina -= 15;
+      stamina -= 33;
     }
   }
   void startAim() {
     if (stamina > 0) {
+      stamina -= 10;
       aiming = true;
       aimStart = new PVector(mouseX, mouseY);
       aimCurrent = aimStart.copy();
@@ -56,9 +57,10 @@ public class Player extends Entity {
     return null;
     aiming = false;
  
-    PVector bowPos = new PVector(pos.x + w / 2, pos.y + h * 0.35);
-    
-    PVector dir = PVector.sub(new PVector(mouseX, mouseY), bowPos); //took a while to fix this: arrow once fired needs to be independent of the bow
+    float bowCX = pos.x + w/1.3 + (13.0/1.3)/2;
+    float bowCY = pos.y + h/4   + (59.0/1.3)/2;
+    PVector bowPos = new PVector(bowCX, bowCY);
+    PVector dir = PVector.sub(new PVector(mouseX, mouseY), bowPos);//took a while to fix this: arrow once fired needs to be independent of the bow
     if (dir.mag() < 5) return null;
  
     //THIS WAS A MISTAKE: REPLACE THIS WITH TIME SPENT CLICKING INSTEAD OF BASING SPEED OFF OF WHERE THE MOUSE IS
@@ -105,22 +107,25 @@ public class Player extends Entity {
       rect(-w/2, -h /2, w, h);
     }
     popMatrix();
+    
+    float bowBX = pos.x + w/1.3;
+    float bowBY = pos.y + h/4;
+    float bowW  = (float)(13.0/1.3);
+    float bowH  = (float)(59.0/1.3);
+    float bowCX = bowBX + bowW/2;
+    float bowCY = bowBY + bowH/2;
  
     // bow always rotates toward mouse
-    PImage bowImg = this.getBow();
-    if (bowImg != null) {
-      float bowAngle = atan2(mouseY - (pos.y + h * 0.35), mouseX - (pos.x + w / 2)); //atan2 lets me get the exact angle from one point to another which is exactly what I needed
-      drawRotated(bowImg, pos.x + w / 2 + 15, pos.y + h*0.25, 10, 45, bowAngle);
-    }
+    float bowAngle = atan2(mouseY - bowCY, mouseX - bowCX);
+    drawRotated(bow, bowBX, bowBY, bowW, bowH, bowAngle);
  
     // aim line shows fire direction (also for debugging)
     if (aiming) {
-      PVector bowPos = new PVector(pos.x+w/1.3, pos.y+h/4); 
-      PVector dir = PVector.sub(new PVector(mouseX, mouseY), bowPos);  
+      PVector dir = PVector.sub(new PVector(mouseX, mouseY), new PVector(bowCX, bowCY));
       dir.normalize();   
       stroke(255, 255, 0, 180); 
       strokeWeight(1); 
-      line(bowPos.x, bowPos.y, bowPos.x + dir.x * 60, bowPos.y + dir.y * 60);
+      line(bowCX, bowCY, bowCX + dir.x * 60, bowCY + dir.y * 60);
       noStroke();   
     }
  
