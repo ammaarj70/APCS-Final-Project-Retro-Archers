@@ -5,7 +5,7 @@ public class Apple extends Physics {
   float gravity = 0.1;
 
   Apple(float x, float y, int type) {
-    super(x, y, 14, 14);
+    super(x, y, 12, 12);
     this.type = type;
     this.active = true;
   }

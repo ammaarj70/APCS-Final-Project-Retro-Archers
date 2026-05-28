@@ -40,8 +40,9 @@ void draw() {
 
 void updateGame() {
   player.applyPhysics();
+  
   player.regenerateStamina();
-  for (Enemy e : enemies) e.updateBot();
+  for (Enemy e : enemies) {e.updateBot(); e.applyPhysics();}
   for (Arrow a : arrows) a.update();
   for (Apple ap : apples) ap.update();
   waveManager.update();
@@ -56,12 +57,10 @@ void renderGame() {
   player.display();
   drawOverlay();
   appleTimer++;
-  if (appleTimer >= 300 && apples.size() < 3) {
+  if (appleTimer >= 300) {
     appleTimer = 0;
     apples.add(new Apple(random(100, 700), random(80, 200), (int)random(3)));
   }
-  waveManager.update();
-  checkCollisions();
 }
 
 void drawOverlay() {
@@ -85,7 +84,81 @@ void checkCollisions() {
       player.vel.y = 0;
       player.onGround = true;
     }
+  // enemies - platform
+  for (Enemy e : enemies) {
+    e.onGround = false;
+    for (Platform pl : platforms) {
+      if (e.vel.y >= 0 &&
+          e.pos.x + e.w > pl.x &&
+          e.pos.x < pl.x + pl.w &&
+          e.pos.y + e.h >= pl.y &&
+          e.pos.y + e.h <= pl.y + pl.h) {
+        e.pos.y = pl.y - e.h;
+        e.vel.y = 0;
+        e.onGround = true;
+      }
+    }
   }
+ 
+  // apples - platform (pos is center, w is radius)
+  for (Apple ap : apples) {
+    if (!ap.active) continue;
+    ap.onGround = false;
+    for (Platform pl : platforms) {
+      if (ap.vel.y >= 0 &&
+          ap.pos.x + ap.w > pl.x &&
+          ap.pos.x - ap.w < pl.x + pl.w &&
+          ap.pos.y + ap.w >= pl.y &&
+          ap.pos.y + ap.w <= pl.y + pl.h) {
+        ap.pos.y = pl.y - ap.w;
+        ap.vel.y = 0;
+        ap.onGround = true;
+      }
+    }
+    if (ap.pos.y > height + 50) ap.active = false;
+  }
+ 
+  // arrows - platform (arrow hits platform and stops)
+  for (Arrow a : arrows) {
+    if (!a.active) continue;
+    for (Platform pl : platforms) {
+      if (a.pos.x > pl.x && a.pos.x < pl.x + pl.w &&
+          a.pos.y > pl.y && a.pos.y < pl.y + pl.h) {
+        a.vel.x = 0;
+        a.vel.y=0;
+      }
+    }
+  }
+ 
+  // arrows - enemies (damage + knockback)
+  for (Arrow a : arrows) {
+    if (!a.active) continue;
+    for (Enemy e : enemies) {
+      if (a.pos.x + 21 > e.pos.x && a.pos.x - 21 < e.pos.x + e.w &&
+          a.pos.y + 5  > e.pos.y && a.pos.y - 5  < e.pos.y + e.h) {
+        int dmg = 20;
+        if (a.type == 2) dmg = 25;
+        else if (a.type == 3) dmg = 15;
+        e.health -= dmg;
+        float mag = a.vel.mag();
+        if (mag > 0.5) e.vel.x += (a.vel.x / mag);
+        e.vel.y = -1.3;
+        e.onGround = false;
+        a.active = false;
+        break;
+      }
+    }
+  }
+ 
+  // remove dead or fallen enemies
+  for (int i = enemies.size()-1; i >= 0; i--) {
+    Enemy e = enemies.get(i);
+    if (e.health <= 0 || e.pos.y > height + 50) enemies.remove(i);
+  }
+ 
+  // player falls off screen
+  if (player.pos.y > height + 50) gameState = GAME_OVER;
+}
  
   for (Enemy e : enemies) {
     e.onGround = false;
