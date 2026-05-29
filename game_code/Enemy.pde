@@ -11,7 +11,11 @@ public class Enemy extends Entity {
     stateTimer = 0;
   }
 
-  void updateBot() {}
+  void updateBot() {
+    if (onGround) {
+      this.vel.x *= 1.1;
+    }
+  }
 
   void display() {
     boolean faceLeft = (target.pos.x < pos.x);

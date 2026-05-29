@@ -32,6 +32,12 @@ public class Entity extends Physics {
     popMatrix();
   }
   
+  void heal(int healing) {
+    this.health += healing;
+    if (this.health > maxHealth)
+      this.health = maxHealth;
+  }
+  
   public void setAim(int aim) {
     this.aim = aim;
   }

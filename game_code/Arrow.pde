@@ -5,6 +5,10 @@ public class Arrow {
   boolean active;
   PImage arrowImg;
   PVector gravity = new PVector(0, 0.06);
+  float angle;
+  String owner;
+  boolean onGround = false;
+  
   
 
   Arrow(PVector pos, PVector vel, int type) {
@@ -26,11 +30,15 @@ public class Arrow {
 
   void display() {
     if (!active) return;
-    float angle = atan2(vel.y, vel.x);
+    angle = atan2(vel.y, vel.x);
     if (arrowImg != null) {
       // pos is the arrow center. offset by half-dims to get top-left for drawRotated
       drawRotated(arrowImg, pos.x - 21, pos.y - 5, 43, 10, angle);
     }
+  }
+  
+  void setOwner(String who) {
+    this.owner = who;
   }
   
   void drawRotated(PImage img, float x, float y, float w, float h, float angle) {
@@ -40,4 +48,6 @@ public class Arrow {
     image(img, -w / 2, -h / 2, w, h);
     popMatrix();
   }
+  
+  
 }

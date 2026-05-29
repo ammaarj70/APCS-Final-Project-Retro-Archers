@@ -23,6 +23,7 @@ void setup() {
   platforms.add(new Platform(460, 400, 180, 20));
   //platforms.add(new Platform(300, 300, 160, 20));
   player = new Player(platforms.get(0).getX()+74+50, platforms.get(0).getY()-80);
+  player.health = 50;
   waveManager = new WaveManager(enemies);
   //arrows.add(new Arrow(new PVector(140, 330), new PVector(1, 2), player.currentArrowType));
   gameState = PLAYING;
@@ -52,14 +53,14 @@ void updateGame() {
 void renderGame() {
   for (Platform p : platforms) p.display();
   for (Apple ap : apples) ap.display();
-  for (Arrow a : arrows) a.display(); System.out.print("HI");
+  for (Arrow a : arrows) a.display();
   for (Enemy e : enemies) e.display();
   player.display();
   drawOverlay();
   appleTimer++;
   if (appleTimer >= 300) {
     appleTimer = 0;
-    apples.add(new Apple(random(100, 700), random(80, 200), (int)random(3)));
+    apples.add(new Apple(random(player.pos.x + 20, 750), random(0, 200), (int)random(3)));
   }
 }
 
@@ -126,6 +127,7 @@ void checkCollisions() {
           a.pos.y > pl.y && a.pos.y < pl.y + pl.h) {
         a.vel.x = 0;
         a.vel.y=0;
+        a.onGround = true;
       }
     }
   }
@@ -149,6 +151,29 @@ void checkCollisions() {
       }
     }
   }
+  
+  // player arrows - apple (health, stamina, both boosts)
+  for (Apple e : apples) {
+    if (!e.active) continue;
+    e.onGround = false;
+    for (Arrow a : arrows) {
+      if (a.pos.x + 21 > e.pos.x && a.pos.x - 21 < e.pos.x + e.w &&
+          a.pos.y + 5  > e.pos.y && a.pos.y - 5  < e.pos.y + e.h && a.onGround == false) {
+        e.active = false;
+        if (a.owner == "player") {
+          if (e.type == 1)
+            player.stamina += 30;
+          if (e.type == 0)
+            player.heal(30);
+          if (e.type == 2) {
+             player.stamina += 30;
+             player.heal(30);
+          }
+        }
+        
+      }
+    }
+  }  
  
   // remove dead or fallen enemies
   for (int i = enemies.size()-1; i >= 0; i--) {
@@ -185,9 +210,7 @@ void keyPressed() {
   }
 }
 
-void mousePressed() {
-  if (gameState == PLAYING) player.startAim();
-}
+void mousePressed() {if (gameState == PLAYING) player.startAim();}
 
 void mouseDragged() {
   if (gameState == PLAYING) player.updateAim();

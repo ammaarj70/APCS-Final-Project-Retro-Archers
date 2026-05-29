@@ -82,7 +82,9 @@ public class Player extends Entity {
       stamina -= 10;
     }
  
-    return new Arrow(bowPos, dir, currentArrowType);
+    Arrow newArrow = new Arrow(bowPos, dir, currentArrowType);
+    newArrow.setOwner("player");
+    return newArrow;
   
   }
   
