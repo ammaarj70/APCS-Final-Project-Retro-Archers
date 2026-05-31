@@ -142,9 +142,8 @@ void checkCollisions() {
         if (a.type == 2) dmg = 25;
         else if (a.type == 3) dmg = 15;
         e.health -= dmg;
-        float mag = a.vel.mag();
-        if (mag > 0.5) e.vel.x += (a.vel.x / mag);
-        e.vel.y = -1.3;
+        e.vel.x += 1;
+        e.vel.y = -2;
         e.onGround = false;
         a.active = false;
         break;
