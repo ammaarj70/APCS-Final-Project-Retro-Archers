@@ -74,6 +74,7 @@ void drawOverlay() {
 }
 
 void checkCollisions() {
+  // player - platform
   player.onGround = false;
   for (Platform p : platforms) {
     if (player.vel.y >= 0 &&
@@ -85,56 +86,58 @@ void checkCollisions() {
       player.vel.y = 0;
       player.onGround = true;
     }
+  }
+
   // enemies - platform
   for (Enemy e : enemies) {
     e.onGround = false;
-    for (Platform pl : platforms) {
+    for (Platform p : platforms) {
       if (e.vel.y >= 0 &&
-          e.pos.x + e.w > pl.x &&
-          e.pos.x < pl.x + pl.w &&
-          e.pos.y + e.h >= pl.y &&
-          e.pos.y + e.h <= pl.y + pl.h) {
-        e.pos.y = pl.y - e.h;
+          e.pos.x + e.w > p.x &&
+          e.pos.x < p.x + p.w &&
+          e.pos.y + e.h >= p.y &&
+          e.pos.y + e.h <= p.y + p.h) {
+        e.pos.y = p.y - e.h;
         e.vel.y = 0;
         e.onGround = true;
       }
     }
   }
- 
-  // apples - platform (pos is center, w is radius)
+
+  // apples - platform
   for (Apple ap : apples) {
     if (!ap.active) continue;
     ap.onGround = false;
-    for (Platform pl : platforms) {
+    for (Platform p : platforms) {
       if (ap.vel.y >= 0 &&
-          ap.pos.x + ap.w > pl.x &&
-          ap.pos.x - ap.w < pl.x + pl.w &&
-          ap.pos.y + ap.w >= pl.y &&
-          ap.pos.y + ap.w <= pl.y + pl.h) {
-        ap.pos.y = pl.y - ap.w;
+          ap.pos.x + ap.w > p.x &&
+          ap.pos.x - ap.w < p.x + p.w &&
+          ap.pos.y + ap.w >= p.y &&
+          ap.pos.y + ap.w <= p.y + p.h) {
+        ap.pos.y = p.y - ap.w;
         ap.vel.y = 0;
         ap.onGround = true;
       }
     }
     if (ap.pos.y > height + 50) ap.active = false;
   }
- 
-  // arrows - platform (arrow hits platform and stops)
+
+  // arrows - platform
   for (Arrow a : arrows) {
-    if (!a.active) continue;
-    for (Platform pl : platforms) {
-      if (a.pos.x > pl.x && a.pos.x < pl.x + pl.w &&
-          a.pos.y > pl.y && a.pos.y < pl.y + pl.h) {
+    if (!a.active || a.onGround) continue;
+    for (Platform p : platforms) {
+      if (a.pos.x > p.x && a.pos.x < p.x + p.w &&
+          a.pos.y > p.y && a.pos.y < p.y + p.h) {
         a.vel.x = 0;
-        a.vel.y=0;
+        a.vel.y = 0;
         a.onGround = true;
       }
     }
   }
- 
-  // arrows - enemies (damage + knockback)
+
+  // player arrows - enemies
   for (Arrow a : arrows) {
-    if (!a.active) continue;
+    if (!a.active || a.onGround || !"player".equals(a.owner)) continue;
     for (Enemy e : enemies) {
       if (a.pos.x + 21 > e.pos.x && a.pos.x - 21 < e.pos.x + e.w &&
           a.pos.y + 5  > e.pos.y && a.pos.y - 5  < e.pos.y + e.h) {
@@ -151,54 +154,45 @@ void checkCollisions() {
       }
     }
   }
-  
-  // player arrows - apple (health, stamina, both boosts)
-  for (Apple e : apples) {
-    if (!e.active) continue;
-    e.onGround = false;
+
+  // enemy arrows - player
+  for (Arrow a : arrows) {
+    if (!a.active || a.onGround || !"enemy".equals(a.owner)) continue;
+    if (a.pos.x + 21 > player.pos.x && a.pos.x - 21 < player.pos.x + player.w &&
+        a.pos.y + 5  > player.pos.y && a.pos.y - 5  < player.pos.y + player.h) {
+      player.health -= 15;
+      float mag = a.vel.mag();
+      if (mag > 0) player.vel.x += (a.vel.x / mag) * 2;
+      player.vel.y = -2;
+      player.onGround = false;
+      a.active = false;
+    }
+  }
+
+  // player arrows - apples
+  for (Apple ap : apples) {
+    if (!ap.active) continue;
     for (Arrow a : arrows) {
-      if (a.pos.x + 21 > e.pos.x && a.pos.x - 21 < e.pos.x + e.w &&
-          a.pos.y + 5  > e.pos.y && a.pos.y - 5  < e.pos.y + e.h && a.onGround == false) {
-        e.active = false;
-        if (a.owner == "player") {
-          if (e.type == 1)
-            player.stamina += 30;
-          if (e.type == 0)
-            player.heal(30);
-          if (e.type == 2) {
-             player.stamina += 30;
-             player.heal(30);
-          }
-        }
-        
+      if (!a.active || a.onGround || !"player".equals(a.owner)) continue;
+      if (a.pos.x + 21 > ap.pos.x - ap.w && a.pos.x - 21 < ap.pos.x + ap.w &&
+          a.pos.y + 5  > ap.pos.y - ap.w && a.pos.y - 5  < ap.pos.y + ap.w) {
+        ap.active = false;
+        if (ap.type == 0) player.heal(30);
+        if (ap.type == 1) player.stamina = min(player.stamina + 30, player.maxStamina);
+        if (ap.type == 2) { player.heal(30); player.stamina = min(player.stamina + 30, player.maxStamina); }
+        a.active = false;
       }
     }
-  }  
- 
+  }
+
   // remove dead or fallen enemies
   for (int i = enemies.size()-1; i >= 0; i--) {
     Enemy e = enemies.get(i);
     if (e.health <= 0 || e.pos.y > height + 50) enemies.remove(i);
   }
- 
-  // player falls off screen
-  if (player.pos.y > height + 50) gameState = GAME_OVER;
-}
- 
-  for (Enemy e : enemies) {
-    e.onGround = false;
-    for (Platform p : platforms) {
-      if (e.vel.y >= 0 &&
-          e.pos.x + e.w > p.x &&
-          e.pos.x < p.x + p.w &&
-          e.pos.y + e.h >= p.y &&
-          e.pos.y + e.h <= p.y + p.h) {
-        e.pos.y = p.y - e.h;
-        e.vel.y = 0;
-        e.onGround = true;
-      }
-    }
-  }
+
+  // player falls or dies
+  if (player.pos.y > height + 50 || player.health <= 0) gameState = GAME_OVER;
 }
 
 void keyPressed() {
