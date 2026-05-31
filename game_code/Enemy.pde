@@ -3,6 +3,8 @@ public class Enemy extends Entity {
   Player target;
   float inaccuracy;
   float numShots;
+  boolean justHit;
+  int crawlTimer;
 
   Enemy(float x, float y, Player target) {
     super(x, y, 32, 82);
@@ -13,6 +15,12 @@ public class Enemy extends Entity {
 
   void updateBot() {
     shotTimer++;
+    if (justHit) crawlTimer++;
+     if (crawlTimer >= 100) {
+       this.vel.x -= 1.5;
+       justHit = false;
+       crawlTimer = 0;
+     }
     if (shotTimer >= 150) {
       fireAtPlayer();
       inaccuracy = max(5, inaccuracy - 5*numShots);

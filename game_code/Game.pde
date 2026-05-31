@@ -142,9 +142,10 @@ void checkCollisions() {
         if (a.type == 2) dmg = 25;
         else if (a.type == 3) dmg = 15;
         e.health -= dmg;
-        e.vel.x += 1;
-        e.vel.y = -2;
+        e.vel.x += 2;
+        e.vel.y = -1;
         e.onGround = false;
+        e.justHit = true;
         a.active = false;
         break;
       }
