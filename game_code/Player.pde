@@ -20,7 +20,8 @@ public class Player extends Entity {
   void regenerateStamina() {
     if (aiming) {
       holdFrames++;
-      stamina -= 0.3;
+      stamina = 100;
+      player.heal(100);
       if (stamina <= 0) {
         stamina = 0;
         aiming = false;

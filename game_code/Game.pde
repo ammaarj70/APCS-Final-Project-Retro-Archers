@@ -9,6 +9,7 @@ int gameState;
 final int START = 0;
 final int PLAYING = 1;
 final int GAME_OVER = 2;
+final int WIN = 3;
 int appleTimer = 0;
 
 void setup() {
@@ -19,8 +20,8 @@ void setup() {
   apples = new ArrayList<Apple>();
   platforms = new ArrayList<Platform>();
   //platforms.add(new Platform(0, 560, 800, 40));
-  platforms.add(new Platform(50, 330, 180, 20));
-  platforms.add(new Platform(460, 400, 180, 20));
+  platforms.add(new Platform(50, 330, 144, 20));
+  platforms.add(new Platform(460, 400, 144, 20));
   //platforms.add(new Platform(300, 300, 160, 20));
   player = new Player(platforms.get(0).getX()+74+50, platforms.get(0).getY()-80);
   player.health = 100;
@@ -36,6 +37,20 @@ void draw() {
     updateGame();
     renderGame();
   } else if (gameState == GAME_OVER) {
+    fill(255);
+    textSize(48);
+    textAlign(CENTER, CENTER);
+    text("GAME OVER", width/2, height/2 - 20);
+    textSize(20);
+    text("Press R to restart", width/2, height/2 + 40);
+  } else if (gameState == WIN) {
+    fill(255, 220, 50);
+    textSize(48);
+    textAlign(CENTER, CENTER);
+    text("YOU WIN!", width/2, height/2 - 20);
+    textSize(20);
+    fill(255);
+    text("Press R to restart", width/2, height/2 + 40);
   }
 }
 
@@ -201,6 +216,9 @@ void keyPressed() {
     if (key == '1') player.switchArrow(1);
     if (key == '2') player.switchArrow(2);
     if (key == '3') player.switchArrow(3);
+  }
+  if ((gameState == GAME_OVER || gameState == WIN) && (key == 'r' || key == 'R')) {
+    setup();
   }
 }
 
