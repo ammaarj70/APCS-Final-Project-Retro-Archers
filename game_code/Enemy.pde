@@ -17,7 +17,8 @@ public class Enemy extends Entity {
     shotTimer++;
     if (justHit) crawlTimer++;
      if (crawlTimer >= 100) {
-       this.vel.x -= 1.5;
+       this.vel.x -= 1.2;
+       this.vel.y -= 0.3;
        justHit = false;
        crawlTimer = 0;
      }
