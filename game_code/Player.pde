@@ -75,8 +75,8 @@ public class Player extends Entity {
       left.rotate(0.3);
       PVector right = dir.copy();
       right.rotate(-0.3);
-      arrows.add(new Arrow(bowPos.copy(), left, 3));
-      arrows.add(new Arrow(bowPos.copy(), right, 3));
+      Arrow aUp = new Arrow(bowPos.copy(), left, 3);  aUp.setOwner("player");  arrows.add(aUp);
+      Arrow aDown = new Arrow(bowPos.copy(), right, 3); aDown.setOwner("player"); arrows.add(aDown);
     } else if (currentArrowType == 2) {
       if (stamina < 10) return null;
       stamina -= 10;

@@ -18,9 +18,10 @@ public class Arrow {
     this.active = true;
     arrowImg = loadImage("arrow.png");
   }
-
+  
   void update() {
-    if (!active) return;
+    if (!active || onGround) 
+      return;
     pos.add(vel);
     vel.add(gravity);
     if (pos.x < 0 || pos.x > width || pos.y < 0 || pos.y > height) {
