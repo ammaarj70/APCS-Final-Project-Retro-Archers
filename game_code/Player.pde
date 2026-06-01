@@ -37,11 +37,11 @@ public class Player extends Entity {
       vel.y = -9;
       onGround = false;
       stamina -= 25;
-      vel.x += 0.6;
     }
   }
   void startAim() {
-    int cost = (currentArrowType == 2 || currentArrowType == 3) ? 15 : 10;
+    int cost = 10; 
+    if (currentArrowType == 2 || currentArrowType == 3) cost = 18;
     if (stamina >= cost) {
       stamina -= cost;
       aiming = true;
@@ -73,7 +73,7 @@ public class Player extends Entity {
     dir.normalize();
     dir.mult(speed);
  
-    if (currentArrowType == 3) { //STILL TESTING
+    if (currentArrowType == 3) {
       if (stamina < 15) return null;
       stamina -= 15;
       PVector left = dir.copy();
@@ -82,9 +82,6 @@ public class Player extends Entity {
       right.rotate(-0.3);
       Arrow aUp = new Arrow(bowPos.copy(), left, 3);  aUp.setOwner("player");  arrows.add(aUp);
       Arrow aDown = new Arrow(bowPos.copy(), right, 3); aDown.setOwner("player"); arrows.add(aDown);
-    } else if (currentArrowType == 2) {
-      if (stamina < 10) return null;
-      stamina -= 10;
     }
  
     Arrow newArrow = new Arrow(bowPos, dir, currentArrowType);
