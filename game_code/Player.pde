@@ -3,6 +3,7 @@ public class Player extends Entity {
   float maxStamina;
   int currentArrowType;
   boolean aiming;
+  int holdFrames;
   PVector aimStart;
   PVector aimCurrent;
 
@@ -18,34 +19,38 @@ public class Player extends Entity {
 
   void regenerateStamina() {
     if (aiming) {
-      stamina -=0.3;
+      holdFrames++;
+      stamina -= 0.3;
       if (stamina <= 0) {
         stamina = 0;
         aiming = false;
       }
-    } 
+    }
     else {
-      stamina += 0.2;
-      if (stamina > maxStamina) 
+      stamina += 0.4;
+      if (stamina > maxStamina)
         stamina = maxStamina;
     }
   }
   void jump() {
-    if (stamina >= 15) {
+    if (stamina >= 15 && onGround) {
       vel.y = -9;
       onGround = false;
-      stamina -= 33;
+      stamina -= 25;
+      vel.x += 0.6;
     }
   }
   void startAim() {
-    if (stamina > 0) {
-      stamina -= 10;
+    int cost = (currentArrowType == 2 || currentArrowType == 3) ? 15 : 10;
+    if (stamina >= cost) {
+      stamina -= cost;
       aiming = true;
+      holdFrames = 0;
       aimStart = new PVector(mouseX, mouseY);
       aimCurrent = aimStart.copy();
     }
   }
-  
+
   void updateAim() {
     if (aiming) {
       aimCurrent = new PVector(mouseX, mouseY);
@@ -62,10 +67,10 @@ public class Player extends Entity {
     PVector bowPos = new PVector(bowCX, bowCY);
     PVector dir = PVector.sub(new PVector(mouseX, mouseY), bowPos);//took a while to fix this: arrow once fired needs to be independent of the bow
     if (dir.mag() < 5) return null;
- 
-    //THIS WAS A MISTAKE: REPLACE THIS WITH TIME SPENT CLICKING INSTEAD OF BASING SPEED OFF OF WHERE THE MOUSE IS
-    float speed = 8;
-    dir.normalize(); //necessary for speed to be accurate
+
+    float speed = min(12, holdFrames * (12.0 / 150) + 3); // the 150 frames is how long it takes to reach max strength, can be changed to some arbitrary value to make the game easier or harder
+    holdFrames = 0;
+    dir.normalize();
     dir.mult(speed);
  
     if (currentArrowType == 3) { //STILL TESTING
@@ -75,8 +80,13 @@ public class Player extends Entity {
       left.rotate(0.3);
       PVector right = dir.copy();
       right.rotate(-0.3);
+<<<<<<< HEAD
       Arrow aUp = new Arrow(bowPos.copy(), left, 3);  aUp.setOwner("player");  arrows.add(aUp);
       Arrow aDown = new Arrow(bowPos.copy(), right, 3); aDown.setOwner("player"); arrows.add(aDown);
+=======
+      Arrow al = new Arrow(bowPos.copy(), left, 3);  al.setOwner("player");  arrows.add(al);
+      Arrow ar = new Arrow(bowPos.copy(), right, 3); ar.setOwner("player");  arrows.add(ar);
+>>>>>>> Waves
     } else if (currentArrowType == 2) {
       if (stamina < 10) return null;
       stamina -= 10;

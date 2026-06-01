@@ -3,6 +3,9 @@ public class Enemy extends Entity {
   Player target;
   float inaccuracy;
   float numShots;
+  boolean justHit;
+  int crawlTimer;
+  int stunTimer;
 
   Enemy(float x, float y, Player target) {
     super(x, y, 32, 82);
@@ -12,10 +15,21 @@ public class Enemy extends Entity {
   }
 
   void updateBot() {
+    if (stunTimer > 0) {
+      stunTimer--;
+      return;
+    }
     shotTimer++;
+    if (justHit) crawlTimer++;
+    if (crawlTimer >= 100) {
+      this.vel.x -= 1.2;
+      this.vel.y -= 0.3;
+      justHit = false;
+      crawlTimer = 0;
+    }
     if (shotTimer >= 150) {
       fireAtPlayer();
-      inaccuracy = max(5, inaccuracy - 5*numShots);
+      inaccuracy = max(5, inaccuracy - 3*numShots);
       shotTimer = 0;
     }
   }
@@ -30,7 +44,7 @@ public class Enemy extends Entity {
 
     PVector dir = new PVector(targetX-startX, targetY-startY);
     dir.normalize();
-    float STRENGTH = 4+(numShots*1.15);
+    float STRENGTH = 3+(numShots*1.1);
     if (STRENGTH > 10) STRENGTH = 14;
     dir.mult(STRENGTH);
 
