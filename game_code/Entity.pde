@@ -38,28 +38,8 @@ public class Entity extends Physics {
       this.health = maxHealth;
   }
   
-  public void setAim(int aim) {
-    this.aim = aim;
-  }
-  
-  public int getAim() {
-    return this.aim;
-  }
-  
-  public PImage getBow() {
+  PImage getBow() {
     return this.bow;
-  }
-  
-  public PImage getImage() {
-    return this.img;
-  }
-  
-  public float getX() {
-    return pos.x;
-  }
-  
-  public float getY() {
-    return pos.y;
   }
   
   

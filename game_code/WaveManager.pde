@@ -42,6 +42,11 @@ public class WaveManager {
     }
     enemyPlatforms.clear();
 
+    // remove arrows that were resting on those platforms
+    for (int i = arrows.size()-1; i >= 0; i--) {
+      if (arrows.get(i).onGround) arrows.remove(i);
+    }
+
     int count = enemiesPerWave[wave - 1];
     float zoneW = 480.0 / count;
 
