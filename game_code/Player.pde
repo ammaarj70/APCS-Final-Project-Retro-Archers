@@ -20,15 +20,14 @@ public class Player extends Entity {
   void regenerateStamina() {
     if (aiming) {
       holdFrames++;
-      stamina = 100;
-      player.heal(100);
+      stamina -= 0.3;
       if (stamina <= 0) {
         stamina = 0;
         aiming = false;
       }
     }
     else {
-      stamina += 0.2;
+      stamina += 0.4;
       if (stamina > maxStamina)
         stamina = maxStamina;
     }
@@ -42,8 +41,9 @@ public class Player extends Entity {
     }
   }
   void startAim() {
-    if (stamina > 0) {
-      stamina -= 10;
+    int cost = (currentArrowType == 2 || currentArrowType == 3) ? 15 : 10;
+    if (stamina >= cost) {
+      stamina -= cost;
       aiming = true;
       holdFrames = 0;
       aimStart = new PVector(mouseX, mouseY);
@@ -53,7 +53,6 @@ public class Player extends Entity {
 
   void updateAim() {
     if (aiming) {
-      holdFrames++;
       aimCurrent = new PVector(mouseX, mouseY);
     }
   }
@@ -67,7 +66,8 @@ public class Player extends Entity {
     float bowCY = pos.y + h/4   + (59.0/1.3)/2;
     PVector bowPos = new PVector(bowCX, bowCY);
     PVector dir = PVector.sub(new PVector(mouseX, mouseY), bowPos);//took a while to fix this: arrow once fired needs to be independent of the bow
- 
+    if (dir.mag() < 5) return null;
+
     float speed = min(12, holdFrames * (12.0 / 150) + 3); // the 150 frames is how long it takes to reach max strength, can be changed to some arbitrary value to make the game easier or harder
     holdFrames = 0;
     dir.normalize();
@@ -80,8 +80,8 @@ public class Player extends Entity {
       left.rotate(0.3);
       PVector right = dir.copy();
       right.rotate(-0.3);
-      arrows.add(new Arrow(bowPos.copy(), left, 3));
-      arrows.add(new Arrow(bowPos.copy(), right, 3));
+      Arrow al = new Arrow(bowPos.copy(), left, 3);  al.setOwner("player");  arrows.add(al);
+      Arrow ar = new Arrow(bowPos.copy(), right, 3); ar.setOwner("player");  arrows.add(ar);
     } else if (currentArrowType == 2) {
       if (stamina < 10) return null;
       stamina -= 10;

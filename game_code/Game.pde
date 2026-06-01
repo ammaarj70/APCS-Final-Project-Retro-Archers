@@ -21,7 +21,7 @@ void setup() {
   platforms = new ArrayList<Platform>();
   //platforms.add(new Platform(0, 560, 800, 40));
   platforms.add(new Platform(50, 330, 144, 20));
-  platforms.add(new Platform(460, 400, 144, 20));
+  //platforms.add(new Platform(460, 400, 144, 20));
   //platforms.add(new Platform(300, 300, 160, 20));
   player = new Player(platforms.get(0).getX()+74, platforms.get(0).getY()-80);
   player.health = 100;
@@ -56,13 +56,18 @@ void draw() {
 
 void updateGame() {
   player.applyPhysics();
-  
   player.regenerateStamina();
-  for (Enemy e : enemies) {e.updateBot(); e.applyPhysics();}
+  for (Enemy e : enemies) { e.updateBot(); e.applyPhysics(); }
   for (Arrow a : arrows) a.update();
   for (Apple ap : apples) ap.update();
   waveManager.update();
   checkCollisions();
+
+  appleTimer++;
+  if (appleTimer >= 300) {
+    appleTimer = 0;
+    apples.add(new Apple(random(50, 750), random(0, 200), (int)random(3)));
+  }
 }
 
 void renderGame() {
@@ -72,11 +77,6 @@ void renderGame() {
   for (Enemy e : enemies) e.display();
   player.display();
   drawOverlay();
-  appleTimer++;
-  if (appleTimer >= 300) {
-    appleTimer = 0;
-    apples.add(new Apple(random(player.pos.x + 20, 750), random(0, 200), (int)random(3)));
-  }
 }
 
 void drawOverlay() {
@@ -84,7 +84,7 @@ void drawOverlay() {
   fill(255);
   textSize(16);
   textAlign(LEFT);
-  text("Wave: " + waveManager.currentWave, 10, 25);
+  text("Wave: " + max(1, waveManager.currentWave), 10, 25);
   text("Arrow: " + names[player.currentArrowType], 10, 45);
 }
 
@@ -157,7 +157,7 @@ void checkCollisions() {
       if (a.pos.x + 21 > e.pos.x && a.pos.x - 21 < e.pos.x + e.w &&
           a.pos.y + 5  > e.pos.y && a.pos.y - 5  < e.pos.y + e.h) {
         int dmg = 20;
-        if (a.type == 2) dmg = 25;
+        if (a.type == 2) { dmg = 15; e.stunTimer = 300; }
         else if (a.type == 3) dmg = 15;
         e.health -= dmg;
         e.vel.x += 2;

@@ -62,19 +62,3 @@ public class WaveManager {
     }
   }
 }
-
-  //void spawnWave(int wave) {
-  //  int count = enemiesPerWave[wave-1];
-  //  Platform p = platforms.get(1);
-    
-  //  float wPer = p.w / count;
-  //  for (int i = 0; i < count; i++) {
-  //    float spawnX = p.x + i*wPer +random(0, wPer-32);
-  //    spawnX = constrain(spawnX, p.x, p.x + p.w - 32);
-  //    float spawnY = p.y - 82;
-  //    enemies.add(new Enemy(spawnX, spawnY, player));
-  //  }
-  //}
-  
-  
-}
