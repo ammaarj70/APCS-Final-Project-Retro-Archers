@@ -34,7 +34,7 @@ public class Player extends Entity {
     }
   }
   void jump() {
-    if (stamina >= 15) {
+    if (stamina >= 15 && onGround) {
       vel.y = -9;
       onGround = false;
       stamina -= 25;

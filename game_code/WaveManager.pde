@@ -1,6 +1,7 @@
 public class WaveManager {
   int currentWave;
   ArrayList<Enemy> enemies;
+  ArrayList<Platform> enemyPlatforms;
   int betweenTimer;
   boolean waveActive;
 
@@ -8,6 +9,7 @@ public class WaveManager {
 
   WaveManager(ArrayList<Enemy> enemies) {
     this.enemies = enemies;
+    this.enemyPlatforms = new ArrayList<Platform>();
     currentWave = 0;
     betweenTimer = 0;
     waveActive = false;
@@ -34,6 +36,45 @@ public class WaveManager {
   }
 
   void spawnWave(int wave) {
+    // remove platforms from the previous wave
+    for (Platform ep : enemyPlatforms) {
+      platforms.remove(ep);
+    }
+    enemyPlatforms.clear();
+
+    int count = enemiesPerWave[wave - 1];
+    float zoneW = 480.0 / count;
+
+    for (int i = 0; i < count; i++) {
+      float pw = 120;
+      float ph = 20;
+      float px = 280 + i * zoneW + random(0, max(0, zoneW - pw));
+      px = constrain(px, 280, 800 - pw - 10);
+      float py = random(180, 430);
+
+      Platform p = new Platform(px, py, pw, ph);
+      platforms.add(p);
+      enemyPlatforms.add(p);
+
+      float ex = px + pw / 2 - 16;
+      float ey = py - 82;
+      enemies.add(new Enemy(ex, ey, player));
     }
   }
+}
+
+  //void spawnWave(int wave) {
+  //  int count = enemiesPerWave[wave-1];
+  //  Platform p = platforms.get(1);
+    
+  //  float wPer = p.w / count;
+  //  for (int i = 0; i < count; i++) {
+  //    float spawnX = p.x + i*wPer +random(0, wPer-32);
+  //    spawnX = constrain(spawnX, p.x, p.x + p.w - 32);
+  //    float spawnY = p.y - 82;
+  //    enemies.add(new Enemy(spawnX, spawnY, player));
+  //  }
+  //}
+  
+  
 }

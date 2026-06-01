@@ -23,7 +23,7 @@ void setup() {
   platforms.add(new Platform(50, 330, 144, 20));
   platforms.add(new Platform(460, 400, 144, 20));
   //platforms.add(new Platform(300, 300, 160, 20));
-  player = new Player(platforms.get(0).getX()+74+50, platforms.get(0).getY()-80);
+  player = new Player(platforms.get(0).getX()+74, platforms.get(0).getY()-80);
   player.health = 100;
   waveManager = new WaveManager(enemies);
   //arrows.add(new Arrow(new PVector(140, 330), new PVector(1, 2), player.currentArrowType));
